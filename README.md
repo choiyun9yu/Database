@@ -233,28 +233,29 @@ LIMIT는 쿼리가 ORDER BY 절까지 모두 실행 후 해당 결과에서 원�
 -----------------------------------------------------------------------------------------------------------
 
 ### 3-2. INSERT
+
 	INSERT INTO 테이블명 VALUES('데이터1', '데이터2', '데이터3');  //  COLUMNS 명시안하면 전체 칼럼에 값 입력해줘야함
 	INSERT INTO 테이블명 COLUMNS(칼럼명1, 칼럼명3) VALUES(데이터1, 데이터3);
 	INSERT INTO 테이블명 select문;  // 조회 데이터를 삽입 (단, 칼럼수가 같아야 한다)
 ----------------------------------------------------------------------------------------------------------
+
 ### 3-3. UPDATE
 
 	UPDATE 테이블명
 	SET 칼럼명 = 데이터
 	WHERE절;  // 조건 입력 안하면 테이블 전체가 다 수정되니 수정할 조건을 입력해줘야한다.
 
-
     병행제어
-	-로킹
-	-타임스탬프
-	-낙관적 병행제어
-	-다중버전 병행제어
-	  (연쇄복귀?) : 두개 이상의 Transaction이 수행되던중 한개의 Transaction이 취소될 때 나머지 다른 Transaction도 연쇄적으로 취소되는 현상
-	  두 트랜잭션이 동일한 데이터 내용을 접근할 때 발생
-	  한 트랜잭션이 데이터를 갱신한 다음 실패하여 Rollback 연산을 수행하는 과정에서 갱신과 Rollback 연산을 실행하고 있는 사이에 
-	  해당 데이터를 읽어서 사용할 때 발생할 수 있는 문제
-	  같은 자원을 사용하는 두개의 트랜잭션 중 한 개의 트랜잭션이 성공적으로 일을 수행하였다 하더라도 
-	  다른 트랜잭션이 처리하는 과정에서 실패하게 되면 두 개의 트랜잭션 모두가 복귀되는 현상
+	- 로킹  
+	- 타임스탬프  
+	- 낙관적 병행제어  
+	- 다중버전 병행제어  
+	- (연쇄복귀?) : 두개 이상의 Transaction이 수행되던중 한개의 Transaction이 취소될 때 나머지 다른 Transaction도 연쇄적으로 취소되는 현상  
+	두 트랜잭션이 동일한 데이터 내용을 접근할 때 발생    
+	한 트랜잭션이 데이터를 갱신한 다음 실패하여 Rollback 연산을 수행하는 과정에서 갱신과 Rollback 연산을 실행하고 있는 사이에   
+	해당 데이터를 읽어서 사용할 때 발생할 수 있는 문제  
+	같은 자원을 사용하는 두개의 트랜잭션 중 한 개의 트랜잭션이 성공적으로 일을 수행하였다 하더라도   
+	다른 트랜잭션이 처리하는 과정에서 실패하게 되면 두 개의 트랜잭션 모두가 복귀되는 현상  
 ----------------------------------------------------------------------------------------------------------
 ### 3-4. DELETE
 
@@ -275,31 +276,32 @@ LIMIT는 쿼리가 ORDER BY 절까지 모두 실행 후 해당 결과에서 원�
 ----------------------------------------------------------------------------------------------------------
 ### 4-1. 테이블, 뷰 관리
 	# 테이블 생성
-		CREATE TABLE 테이블명(
-			컬럼명1 데이터타입(데이터크기), 
-			컬럼명2 테이터타입(데이터크기)
-			)
+	CREATE TABLE 테이블명(
+		컬럼명1 데이터타입(데이터크기), 
+		컬럼명2 테이터타입(데이터크기)
+		)
 
 	# 테이블 생성2 (AS 사용)
-		CREATE TABLE 테이블명
-		AS
-		SELECT문;  // 조회되는 내용으로 테이블 생성
+	CREATE TABLE 테이블명
+	AS
+	SELECT문;  // 조회되는 내용으로 테이블 생성
 
 	# 테이블 수정
-		- 추가 : ALTER TABLE 
-				ADD (칼럼명 데이터타입(데이터크기));
 
-		- 수정 : ALTER TABLE
-				MODIFY (컬럼명 데이터타입(데이터크기));
+  	ALTER TABLE 
+	ADD (칼럼명 데이터타입(데이터크기));	// 추가
 
-		- 삭제 : ALTER TABLE
-				DROP COLUMN 컬럼명;
+	ALTER TABLE
+	MODIFY (컬럼명 데이터타입(데이터크기));	// 수정
+
+	ALTER TABLE
+	DROP COLUMN 컬럼명;			// 삭제
 
 	# 테이블 삭제
-		DROP TABLE 테이블명;
+	DROP TABLE 테이블명;
 	
 	# 테이블 초기화
-		TRUNCATE TABLE 테이블명;  // DDL로 테이블 지우면 롤백 불가능
+	TRUNCATE TABLE 테이블명;  // DDL로 테이블 지우면 롤백 불가능
 
 	# 테이브 제약조건
 		- PK(primary key)
@@ -307,33 +309,35 @@ LIMIT는 쿼리가 ORDER BY 절까지 모두 실행 후 해당 결과에서 원�
 		- UK(unique) : 중복을 방지한다
 		- NN(not null) 
 
-		(ex1) 테이블 레벨 단위에서 제약조건 설정
-			  CREATE TABLE 테이블명(
-			  	칼럼명1 VARCHAR(10),
-			  	칼럼명2 VARCHAR(10,
-			   	칼럼명3 VARCHAR(10),
-			  	칼럼명4 NUMBER(10),
-			  	CONSTRAINT 제약조건명 PRIMARY KEY(칼럼명1),
-				CONSTRAINT FOREGIN KEY(칼럼명3)
-				REFERENCES 참조할테이블명(칼럼명)
-			    )
+	# ex1 테이블 레벨 단위에서 제약조건 설정
+	CREATE TABLE 테이블명(
+		칼럼명1 VARCHAR(10),
+		칼럼명2 VARCHAR(10,
+		칼럼명3 VARCHAR(10),
+		칼럼명4 NUMBER(10),
+		CONSTRAINT 제약조건명 PRIMARY KEY(칼럼명1),
+		CONSTRAINT FOREGIN KEY(칼럼명3)
+		REFERENCES 참조할테이블명(칼럼명)
+		)
 
-		(ex2) 컬럼레벨 단위에서 제약조건 설정  // not null은 컬럼 레벨에서만 가능
-			  CREATE TABLE 테이블명(
-			  	칼럼명1 VARCHAR(10) CONSTRAINT 제약조건명 PRIMARY KEY,
-			  	칼럼명2 VARCHAR(10 CHECK (조건),  // 조건에 맞아야 데이터 삽입 가능
-			   	칼럼명3 VARCHAR(10) NOT NULL,
-			  	칼럼명4 NUMBER(10) REFERENCES 참조할테이블명(칼럼명),
-			    )
+	# ex2 컬럼레벨 단위에서 제약조건 설정  // not null은 컬럼 레벨에서만 가능
+	CREATE TABLE 테이블명(
+		칼럼명1 VARCHAR(10) CONSTRAINT 제약조건명 PRIMARY KEY,
+		칼럼명2 VARCHAR(10 CHECK (조건),  // 조건에 맞아야 데이터 삽입 가능
+		칼럼명3 VARCHAR(10) NOT NULL,
+		칼럼명4 NUMBER(10) REFERENCES 참조할테이블명(칼럼명),
+		)
 
 	# 제약조건2 : 밖에서 외래키 설정한는 방법
-		ALTER TABLE 테이블명
-			ADD CONSTRAINT 외래키명 FOREIGN KEY (칼럼명)
-			REFERENCES 테이블명 (칼럼명);
+	ALTER TABLE 테이블명
+		ADD CONSTRAINT 외래키명 FOREIGN KEY (칼럼명)
+		REFERENCES 테이블명 (칼럼명);
 
    *TABLE 자리에 VIEW입력하면 뷰에 대한 쿼리문이 된다.
 ----------------------------------------------------------------------------------------------------------
+
 ### 4-2. 시퀀스 관리 
+
 	CREATE SEQUENCE 시퀀스명
 	MINVALUE -- 시퀀스가 시작되는 최초의 숫자
 	MAXVALUE --시퀀스가 끝나는 최대 숫자
@@ -343,12 +347,13 @@ LIMIT는 쿼리가 ORDER BY 절까지 모두 실행 후 해당 결과에서 원�
 	NOORDER  --요청되는 순서대로 값을 생성하지 않음
 	NOCYCLE  --초기값부터 다시 시작하지 않음
 
-	(ex) CREATE SEQUENCE mem_ID_SEQ
-			START WITH 100
-			INCREMENT BY 1
-			MINVALUE 100
-			MAXVALUE 9999
-			NOCYCLE;
+	# ex
+ 	CREATE SEQUENCE mem_ID_SEQ
+		START WITH 100
+		INCREMENT BY 1
+		MINVALUE 100
+		MAXVALUE 9999
+		NOCYCLE;
 
 ## 5. DCL
 #### 기본 개념

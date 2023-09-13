@@ -66,25 +66,91 @@ NEXT_PUBLIC_HOST=http://localhost:3000
 [Mongoose의 Model 문서](https://mongoosejs.com/docs/api/model.html)
 
 ### 2-1 데이터베이스 연동하기
+[공식 리포지터리 코드](https://github.com/vercel/next.js/tree/canary/examples/with-mongodb-mongoose)  
+
+        import mongoose from 'mongoose';
+        // ...
+        await dbConnect();
+        console.log(mongoose.connection.readyState);    // mongoose.connection.readySatate라는 값으로 연동되었는지 확인, 1이어야 연동
 
 ### 2-2. 모델 만들기
+
+        import mongoose from 'mongoose';
+
+        const shortLinkSchema = new mongoose.Schema(
+          {
+            title: { type: String, default: '' },
+            url: { type: String, default: '' },
+            shortUrl: { type: String, default: '' },
+          },
+          {
+            timestamps: true,
+          }
+        );
+        
+        const ShortLink =
+          mongoose.models['ShortLink'] || mongoose.model('ShortLink', shortLinkSchema);
+          // 모듈 파일을 import할 때마다 모델을 생성하지 않도록 작성 ||를 사용
+        
+        export default ShortLink;
+
+- 스키마 생성 : **mongoose.Schema()**
+- 모델 생성 : **mongoose.model()**
+  이때 모델의 이름을 첫 번째 아규먼트로 넘겨주는데, 이 이름은 mongoose.models[...]로 참조할 수 있기 때문에 잘 지정했는지 반드시 확인
+- 
 
 ### 2-3. 모델 다루기
 
 #### 생성 : Model.create()
+아규먼트로 전달한 값으로 도큐먼트 생성
+
+        const newShortLink = await ShortLink.create({
+          title: '코드잇 커뮤니티',
+          url: 'https://www.codeit.kr/community/general',
+        });
 
 #### 여러 개 조회 : Model.find()
+조건에 맞는 모든 도큐먼트 조회, 이때 조건으로 쓰이는 객체는 MongoDB의 문법을 따른다.  
+
+        const shortLinks = await ShortLink.find(); // 모든 도큐먼트 조회
+    
+        const filteredShortLinks = await ShortLink.find({ shortUrl: 'c0d317' }) // shortUrl 값이 'c0d317'인 모든 도큐먼트 조회
 
 #### 아이디로 하나만 조회 : Model.findById()
+아규먼트로 넘겨준 아이디에 해당하는 도큐먼트를 조회
+
+        const shortLink = await ShortLink.findById('n3x7j5');
 
 #### 아이디로 업데이트하기 : Model.findByIdAndUpdate()
+첫 번째 아규먼트로 넘겨준 아이디에 해당하는 도큐먼트 업데이트  
+두 번째 아규먼트로는 업데이트할 값을 입력  
+
+        const updatedShortLink = await ShortLink.findByIdAndUpdate('n3x7j5', { ... });
 
 #### 아이디로 삭제하기 : Model.findByIdAndDelete()
+아규먼트로 넘겨준 아이디에 해당하는 도큐먼트를 삭제
+
+        await ShortLink.findByIdAndDelete('n3x7j5');
 
 ### 2-4. 기타
 
 #### 조건으로 조회하기
+아규먼트로 조건을 넘겨주고 해당하는 도큐먼트를 하나만 조회
+
+        const shortLink = await ShortLink.findOne({ shortUrl: 'c0d317' });
 
 #### 조건으로 업데이트하기
+첫 번째 아규먼트로 넘겨준 조건에 해당하는 도큐먼트 업데이트  
+두번째 아규먼트로는 업데이트할 값을 입력
+
+        await ShortLink.updateOne({ _id: 'n3x7j5' }, { ... }); // 업데이트만 하고 업데이트 된 값을 리턴하지는 않음
+
+        const updatedShortLink = await ShortLink.findOneAndUpdate({ _id: 'n3x7j5' }, { ... });
 
 #### 조건으로 삭제하기
+아규먼트로 넘겨준 조건에 해당하는 도큐먼트를 삭제
+
+        await ShortLink.deleteOne({ _id: 'n3x7j5' }, { ... }); // 삭제만 하고  기존 값을 리턴하지는 않음
+
+        const deletedShortLink = await ShortLink.findOneAndDelete({ _id: 'n3x7j5' }, { ... });
+

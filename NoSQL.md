@@ -1,9 +1,9 @@
 # MongoDB
 
-## 0. MongoDB 설치
+## 1. MongoDB 설치
 
 #### Linux
-[ref]([https://jjeongil.tistory.com/2031](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/#std-label-install-mdb-community-ubuntu))
+[ref]([https://jjeongil.tistory.com/2031](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/#std-label-install-mdb-community-ubuntu)
 
     $ sudo apt-get install gnupg curl
     $ curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
@@ -23,18 +23,21 @@
     $ sudo systemctl status mongod
     # 종료하기
     $ sudo systemctl stop mongod 
-  
-## 1. MongoDB
 
+### 1-1. MongoDB 구성
+- NoSQL : 미리 정의된 스키마가 필요하지 않으며, 시간이 지남에 따라 데이터 구조 변경 가능 
 - Document : MongoDB에 저장하는 데이터 (객체 같은 것)
 - Collection : Document 모음
-- NoSQL : 미리 정의된 스키마가 필요하지 않으며, 시간이 지남에 따라 데이터 구조 변경 가능 
+######
+MongoDB 구성 파일의 이름은 mongod.conf이며 형식은 YAML이고 /etc 디렉토리에 있다.  
 
-### 1-1. MongoDB Atlas
+## 2. MongoDB with Next.js
+
+### 2-1. MongoDB Atlas
 MongoDB 만드는 회사에서 운영하는 클라우드 서비스  
 [MongoDB Atlas 사용법](https://www.codeit.kr/tutorials/70/mongodb-atlas)
 
-### 1-2.Mongoose
+### 2-2.Mongoose
 MongoDB에서 공식적으로 제공하는 라이브러리는 npm의 mongodb 패키지이다.  
 그러나 굉장히 로우 레벨로 구현되어 있어 번거롭다. 그래서 추상화된 라이브러리를 주로 사용한다.  
 Mongoose 라이브러리는 쉽고 편리하기 때문에 JS 개발자들이 가장 많이 사용하는 라이브러리다.  
@@ -42,7 +45,7 @@ Mongoose 라이브러리는 쉽고 편리하기 때문에 JS 개발자들이 가
     # install
     $ npm install mongoose
 
-### 1-3. Next.js에서 환경변수 사용하기
+### 2-3. Next.js에서 환경변수 사용하기
 
 #### 환경변수
 우리가 평소 사용하는 서비스는 보통 서버 하나, 데이터베이스 하나로 실행되지 않는다.  
@@ -87,10 +90,10 @@ NEXT_PUBLIC_HOST=http://localhost:3000
         <>호스트 주소: {process.env.NEXT_PUBLIC_HOST}</>
       );
 
-## 2. Mongoose 문법 정리
+## 3. Mongoose 문법 정리
 [Mongoose의 Model 문서](https://mongoosejs.com/docs/api/model.html)
 
-### 2-1 데이터베이스 연동하기
+### 3-1 데이터베이스 연동하기
 [공식 리포지터리 코드](https://github.com/vercel/next.js/tree/canary/examples/with-mongodb-mongoose)  
 
         import mongoose from 'mongoose';
@@ -98,7 +101,7 @@ NEXT_PUBLIC_HOST=http://localhost:3000
         await dbConnect();
         console.log(mongoose.connection.readyState);    // mongoose.connection.readySatate라는 값으로 연동되었는지 확인, 1이어야 연동
 
-### 2-2. 모델 만들기
+### 3-2. 모델 만들기
 
         import mongoose from 'mongoose';
 
@@ -124,7 +127,7 @@ NEXT_PUBLIC_HOST=http://localhost:3000
   이때 모델의 이름을 첫 번째 아규먼트로 넘겨주는데, 이 이름은 mongoose.models[...]로 참조할 수 있기 때문에 잘 지정했는지 반드시 확인
 - 
 
-### 2-3. 모델 다루기
+### 3-3. 모델 다루기
 
 #### 생성 : Model.create()
 아규먼트로 전달한 값으로 도큐먼트 생성
@@ -157,7 +160,7 @@ NEXT_PUBLIC_HOST=http://localhost:3000
 
         await ShortLink.findByIdAndDelete('n3x7j5');
 
-### 2-4. 기타
+### 3-4. 기타
 
 #### 조건으로 조회하기
 아규먼트로 조건을 넘겨주고 해당하는 도큐먼트를 하나만 조회

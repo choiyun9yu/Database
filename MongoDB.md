@@ -65,10 +65,10 @@ Next.js에서는 기본적으로 dotenv라는 라이브러리를 지원한다.
 이때 주의할 점은 .env 파일 같은 건 소스코드에 포함시키면 안 된다.  
 Next.js 프로젝트에서는 기본적으로 dotenv 설정이 되어 있어서, .env.local 같은 파일을 추가하면 손쉽게 환경 변수를 추가할 수 있다.  
 
-    # @/.env.local
+    # @/.env.local(파일 만들어서)
     MONGODB_URI=mongodb+srv://admin:blahblah@.clusterName.blahblah.mongodb.net/databaseName?retryWrites=true&w=majority
-
     // 추가한 값을 process.env.MONGODB_URI로 참조할 수 있게된다.
+
     # pages/api/short-links/index.js
     export default function handler(req, res) {
     const DB_URI = process.env.MONGODB_URI;
@@ -81,9 +81,11 @@ Next.js 프로젝트에서는 기본적으로 dotenv 설정이 되어 있어서,
 이를 방지하고자 Next.js에서는 클라이언트 사이드에서 사용하는 환경 변수에 특별한 접두사(prefix)를 사용한다.  
 **NEXT_PUBLIC_** 이라고 이름을 붙이면 이 환경 변수는 클라이언트 사이드에서도 사용할 수 있다.  
 
+    # @/.env.local
     MONGODB_URI=mongodb+srv://admin:blahblah@cluster0.blahblah.mongodb.net/databaseName?retryWrites=true&w=majority
 NEXT_PUBLIC_HOST=http://localhost:3000
-        
+
+    # @/pages/Home.js
     export default Home() {
       // 페이지 컴포넌트에서는 아래와 같이 사용
       return (

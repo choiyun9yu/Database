@@ -1,9 +1,31 @@
 # MongoDB
 
+## 0. MongoDB 설치
+
+#### Linux
+[ref](https://jjeongil.tistory.com/2031)
+
+    # HTTPS를 통해 새 리포지토리를 추가하는 데 필요한 종속성을 설치
+    $ sudo apt update
+    $ sudo apt install dirmngr gnupg apt-transport-https ca-certificates software-properties-common
+
+    # 리포지토리의 GPG 키를 가져오고 MongoDB 리포지토리를 추가 (다른 버전 설치하려면 4.4를 바꾸면 된다.)
+    $ wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+sudo add-apt-repository 'deb [arch=amd64] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse'
+
+    # Mongodb-org 메타 패키지 설치
+    $ sudo apt install mongodb-org
+
+    # 설치 확인 
+    $ mongo --eval 'db.runCommand({ connectionStatus:1 })'
+    
+
+
 ## 1. MongoDB 준비하기
 
 - Document : MongoDB에 저장하는 데이터 (객체 같은 것)
 - Collection : Document 모음
+- NoSQL : 미리 정의된 스키마가 필요하지 않으며, 시간이 지남에 따라 데이터 구조 변경 가능 
 
 ### 1-1. MongoDB Atlas
 MongoDB 만드는 회사에서 운영하는 클라우드 서비스  

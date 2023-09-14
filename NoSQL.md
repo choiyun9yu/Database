@@ -3,25 +3,28 @@
 ## 0. MongoDB 설치
 
 #### Linux
-[ref](https://jjeongil.tistory.com/2031)
+[ref]([https://jjeongil.tistory.com/2031](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/#std-label-install-mdb-community-ubuntu))
 
-    # HTTPS를 통해 새 리포지토리를 추가하는 데 필요한 종속성을 설치
-    $ sudo apt update
-    $ sudo apt install dirmngr gnupg apt-transport-https ca-certificates software-properties-common
-
-    # 리포지토리의 GPG 키를 가져오고 MongoDB 리포지토리를 추가 (다른 버전 설치하려면 4.4를 바꾸면 된다.)
-    $ wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
-sudo add-apt-repository 'deb [arch=amd64] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse'
-
-    # Mongodb-org 메타 패키지 설치
-    $ sudo apt install mongodb-org
-
-    # 설치 확인 
-    $ mongo --eval 'db.runCommand({ connectionStatus:1 })'
+    $ sudo apt-get install gnupg curl
+    $ curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+   --dearmor
+    $ echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+    $ sudo apt-get update
+    # 최신버전 설치
+    $ sudo apt-get install -y mongodb-org
+    # 특정버전 설치
+    $ sudo apt-get install -y mongodb-org=7.0.1 mongodb-org-database=7.0.1 mongodb-org-server=7.0.1 mongodb-mongosh=7.0.1 mongodb-org-mongos=7.0.1 mongodb-org-tools=7.0.1
+    # 설치 확인
+    $ mongod --version
     
-
-
-## 1. MongoDB 준비하기
+    # 시작하기
+    $ sudo systemctl start mongod
+    $ sudo systemctl status mongod
+    # 종료하기
+    $ sudo systemctl stop mongod 
+  
+## 1. MongoDB
 
 - Document : MongoDB에 저장하는 데이터 (객체 같은 것)
 - Collection : Document 모음

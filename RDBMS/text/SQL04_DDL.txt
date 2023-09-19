@@ -1,0 +1,126 @@
+# 데이터 베이스 객체 종류
+	- TABLE
+	- VIEW
+	- SEQUENCE
+----------------------------------------------------------------------------------------------------------
+
+# 데이터 타입 
+	- char : 들어오는 데이터의 개수가 일정할 때 사용
+	- varchar : 들어오는 데이터의 크기가 가변적일 때 사용  // char보다 느리지만 저장공간 아낄 수 있음
+	- varchar2 : 2는 메모리 성능을 조금 더 보완한 데이터 타입
+----------------------------------------------------------------------------------------------------------
+
+# 테이블 관리
+	TABLE 자리에 VIEW입력하면 뷰에 대한 쿼리문이 된다.
+
+	# 테이블 생성
+		CREATE TABLE 테이블명(
+			컬럼명1 데이터타입(데이터크기), 
+			컬럼명2 테이터타입(데이터크기)
+			)
+
+	# 테이블 생성2 (AS 사용)
+		CREATE TABLE 테이블명
+		AS
+		SELECT문;  // 조회되는 내용으로 테이블 생성
+
+	# 테이블 수정
+		- 추가 : ALTER TABLE 
+				ADD (칼럼명 데이터타입(데이터크기));
+
+		- 수정 : ALTER TABLE
+				MODIFY (컬럼명 데이터타입(데이터크기));
+
+		- 삭제 : ALTER TABLE
+				DROP COLUMN 컬럼명;
+
+	# 테이블 삭제
+		DROP TABLE 테이블명;
+	
+	# 테이블 초기화
+		TRUNCATE TABLE 테이블명;  // DDL로 테이블 지우면 롤백 불가능
+
+	# 테이브 제약조건
+		- PK(primary key)
+		- FK(foreign key)
+		- UK(unique) : 중복을 방지한다
+		- NN(not null) 
+
+		(ex1) 테이블 레벨 단위에서 제약조건 설정
+			  CREATE TABLE 테이블명(
+			  	칼럼명1 VARCHAR(10),
+			  	칼럼명2 VARCHAR(10,
+			   	칼럼명3 VARCHAR(10),
+			  	칼럼명4 NUMBER(10),
+			  	CONSTRAINT 제약조건명 PRIMARY KEY(칼럼명1),
+				CONSTRAINT FOREGIN KEY(칼럼명3)
+				REFERENCES 참조할테이블명(칼럼명)
+			    )
+
+		(ex2) 컬럼레벨 단위에서 제약조건 설정  // not null은 컬럼 레벨에서만 가능
+			  CREATE TABLE 테이블명(
+			  	칼럼명1 VARCHAR(10) CONSTRAINT 제약조건명 PRIMARY KEY,
+			  	칼럼명2 VARCHAR(10 CHECK (조건),  // 조건에 맞아야 데이터 삽입 가능
+			   	칼럼명3 VARCHAR(10) NOT NULL,
+			  	칼럼명4 NUMBER(10) REFERENCES 참조할테이블명(칼럼명),
+			    )
+
+	# 제약조건2 : 밖에서 외래키 설정한는 방법
+		ALTER TABLE 테이블명
+			ADD CONSTRAINT 외래키명 FOREIGN KEY (칼럼명)
+			REFERENCES 테이블명 (칼럼명);
+----------------------------------------------------------------------------------------------------------
+
+# 계정 관리
+	# 계정 생성
+		- mysql : CREATE USER (계정명)@(접속위치) 
+				  IDENTIFITED BY (비밀번호);
+		- oracle : CREATE USER (계정명) 
+				   IDENTIFIED BY (비밀번호);
+	# 계정 삭제
+		- mysql : DROP USER (계정명)@(접속위치);
+		- oracle : DROP DATABASE (DB명); 
+----------------------------------------------------------------------------------------------------------
+
+# 시퀀스 관리 
+	CREATE SEQUENCE 시퀀스명
+	MINVALUE -- 시퀀스가 시작되는 최초의 숫자
+	MAXVALUE --시퀀스가 끝나는 최대 숫자
+	INCREMENT BY -- 시퀀스가 증가되는 단위
+	START WITH -- 시퀀스 생성이 시작되는 값
+	NOCACHE  -- 캐시를 사용하지 않음
+	NOORDER  --요청되는 순서대로 값을 생성하지 않음
+	NOCYCLE  --초기값부터 다시 시작하지 않음
+
+	(ex) CREATE SEQUENCE mem_ID_SEQ
+			START WITH 100
+			INCREMENT BY 1
+			MINVALUE 100
+			MAXVALUE 9999
+			NOCYCLE;
+----------------------------------------------------------------------------------------------------------
+
+#오라클에서 오토인크리먼트 구현
+
+	시퀀스 만들기
+	CREATE SEQUENCE MEM_MEMID_SEQ
+	INCREMENT BY 1 -- 증가값 : 1
+	START WITH 100 -- 시작값 : 100
+	MINVALUE 100 -- 최솟값 : 100
+	MAXVALUE 9999 -- 최댓값 : 9999
+	NOCYCLE;
+
+	시퀀스 넘기기
+	select mem_id_seq.NextVAL
+	from dual
+
+	현재 시퀀스 조회
+	select mem_id_seq.currval
+	from dual
+
+
+	insert into member(mem_id, id, pw, name)
+	values (mem_id_seq.nextval, 'yg', '1234', 'yun9yu');
+
+	입력값을 넥스트 벨류로 넣으면 됨
+----------------------------------------------------------------------------------------------------------

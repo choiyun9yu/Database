@@ -4,18 +4,20 @@
 
 #### Linux
 
-[ref]([https://jjeongil.tistory.com/2031](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/#std-label-install-mdb-community-ubuntu)
+[ref](https://jjeongil.tistory.com/2031)
+[ref2](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/#std-label-install-mdb-community-ubuntu)
 
     $ sudo apt-get install gnupg curl
     $ curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
 
-sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
- --dearmor
-$ echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-$ sudo apt-get update # 최신버전 설치
-$ sudo apt-get install -y mongodb-org # 특정버전 설치
-$ sudo apt-get install -y mongodb-org=7.0.1 mongodb-org-database=7.0.1 mongodb-org-server=7.0.1 mongodb-mongosh=7.0.1 mongodb-org-mongos=7.0.1 mongodb-org-tools=7.0.1 # 설치 확인
-$ mongod --version
+    $ sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+    --dearmor
+    $ echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+    $ sudo apt-get update # 최신버전 설치
+    $ sudo apt-get install -y mongodb-org # 특정버전 설치
+    $ sudo apt-get install -y mongodb-org=7.0.1 mongodb-org-database=7.0.1 mongodb-org-server=7.0.1 mongodb-mongosh=7.0.1 mongodb-org-mongos=7.0.1 mongodb-org-tools=7.0.1 # 설치 확인
+    $ mongod --version
 
     # 시작하기
     $ sudo systemctl start mongod

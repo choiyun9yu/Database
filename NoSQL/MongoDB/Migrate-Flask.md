@@ -90,3 +90,112 @@
             return find_list
 
 ## 3. PyMongo 문법
+
+### 3-1. Create
+
+    # 단일 문서 삽입
+    result = collection.insert_one({"key": "value"})
+    
+    # 다중 문서 삽입
+    data = [{"key1": "value1"}, {"key2": "value2"}]
+    result = collection.insert_many(data)
+
+### 3-2. Read
+
+    # 단일 문서 조회
+    document = collection.find_one({"key": "value"})
+
+    # 다중 문서 조회
+    cursor = collection.find({"key": "value"})
+
+### 3-3. Update
+
+    # 단일 문서 수정
+    result = collection.update_one({"key": "value"}, {"$set": {"new_key": "new_value"}})
+
+    # 다중 문서 수정
+    result = collection.update_many({"key": "value"}, {"$set": {"new_key": "new_value"}})
+
+### 3-4. Delete
+
+    # 단일 문서 삭제
+    result = collection.delete_one({"key": "value"})
+
+    # 다중 문서 삭제
+    result = collection.delete_many({"key": "value"})
+
+### 3-5. Count
+
+    # 먼서 수 세기
+    count = collection.count_documents({"key": "value"})
+
+### 3-6. Sort
+
+    # 문서 정렬 
+    cursor = collection.find().sort("key", pymongo.ASCENING)    # 오름차순
+    cursor = collection.find().sort("key", pymongo.DESCENING)    # 내림차순
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

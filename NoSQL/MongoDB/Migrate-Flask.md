@@ -1,71 +1,92 @@
 # Migrate to Flask
 
-## 목차
-
--   필수 라이브러리 설치
--   Flask 어플리케이션 설정
--   데이터 마이그레이션
-
-<hr>
-
 ## 1. 필수 라이브러리 설치
 
 #### proejectDirectory
 
-    $ pip install Flask-PyMongo
+    % pip install Flask-PyMongo
+    % pip install pipreqs
+    % pipreqs [경로]
 
-## 2. Flask 어플리케이션 설정
+## 2. 레거시 프로젝트
 
-#### app.py
+### 2-1. Project Architecture
 
-아래 코드에서 'mongodb://localhost:27017/your_database_name'은  
-MongoDB 서버의 주소 및 데이터베이스 이름에 맞게 수정
+    kisa-prediction-service/
+    ├── app/
+    │   ├── __init__.py
+    │   ├── routes.py
+    │   └── models.py
+    ├── config.py
+    ├── run.py
+    └── requirements.txt
 
-    from flask import Flask
-    from flask_pymongo import PyMongo
+### 2-2. Dependency management
 
-    app = Flask(__name__)
+    % pip freeze > requirements.txt
 
-    app.config['MONGO_URI'] = 'mongodb://localhost:27017/your_database_name'
-    mongo = PyMongo(app)
+    % pip install -r requirements.txt
 
-## 3. 데이터 마이그레이션
+### 2-3. CODE
 
-필요한 데이터를 Python 코드로 로드하고 MongoDB에 삽입  
-이 코드는 /migrate_data 엔드포인트로 접속하면 데이터를 MongoDB에 마이그레이션하는 코드
+#### run.py
 
-    from flask import Flask
-    from flask_pymongo import PyMongo
-
-    app = Flask(__name__)
-
-    app.config['MONGO_URI'] = 'mongodb://localhost:27017/your_database_name'
-    mongo = PyMongo(app)
-
-    @app.route('/migrate_data')
-    def migrate_data():
-        data_to_migrate = [
-            {
-                "name": "John",
-                "age": 30,
-                "city": "New York"
-            },
-            {
-                "name": "Alice",
-                "age": 25,
-                "city": "Los Angeles"
-            },
-            {
-                "name": "Bob",
-                "age": 35,
-                "city": "Chicago"
-            }
-        ]
-
-        # MongoDB 컬렉션에 데이터 삽입
-        mongo.db.your_collection_name.insert_many(data_to_migrate)
-
-        return 'Data migration complete'
+    from app import app
 
     if __name__ == '__main__':
-        app.run()
+        app.run(port=5000, debug=True)
+
+#### config.py
+
+    class Config:
+    MONGO_URI = 'mongodb://localhost:27017/[DatabaseName]'
+
+#### app/**init**.py
+
+    from flask import Flask
+
+    from config import Config
+    from .models import mongo
+    from .routes import api_blueprint
+
+    def create_app():
+        app = Flask(__name__)
+        app.config.from_object(Config)
+        mongo.init_app(app)
+        app.register_blueprint(api_blueprint)
+
+        return app
+
+    app = create_app()
+
+#### app/routes.py
+
+    from flask import jsonify, Blueprint, request
+
+    from .models import Data
+
+    api_blueprint = Blueprint('api', __name__)
+
+    @api_blueprint.route('/api/data', methods=['GET', 'POST'])
+    def data_page():
+        if request.method == 'GET':
+            data = Data.get_drones()
+            return jsonify({"ai_drones": drones})
+        else:
+            # post 로직
+
+#### app/models.py
+
+    from flask_pymongo import PyMongo
+
+    mongo = PyMongo()
+
+    class Data:
+        @staticmethod
+        def get_data():
+            cursor = mongo.db.[collectionName].find() 
+            find_list = list(ai_drones_cursor)
+            # PyMongo를 사용할 경우 커서 따로 닫아줄 필요 없음
+            return find_list
+
+## 3. PyMongo 문법

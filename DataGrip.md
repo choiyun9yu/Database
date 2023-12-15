@@ -6,8 +6,8 @@
 
 > [ + ] - [ DataSource ] - 데이터베이스 선택
 
-> Name: 데이터베이스 별명
-> Host: DBMS host ip
-> Port: DBMS port 
-> User: 
+> Name: 데이터베이스 별명  
+> Host: DBMS host ip  
+> Port: DBMS port   
+> User:   
 > Password:

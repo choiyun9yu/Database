@@ -11,3 +11,5 @@
 > Port: DBMS port   
 > User:   
 > Password:
+
+> [ Test Connection ] - [ Apply ]
